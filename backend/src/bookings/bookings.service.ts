@@ -48,7 +48,7 @@ export class BookingsService {
 
     const booking = this.bookingRepository.create({
       roomId,
-      date: new Date(date),
+      date: new Date(year, month - 1, day),
       startTime,
       endTime,
       title,
@@ -69,7 +69,8 @@ export class BookingsService {
       .where('booking.room_id = :roomId', { roomId });
 
     if (date) {
-      const dateObj = new Date(date);
+      const [year, month, day] = date.split('-').map(Number);
+      const dateObj = new Date(year, month - 1, day);
       dateObj.setHours(0, 0, 0, 0);
       const nextDay = new Date(dateObj);
       nextDay.setDate(nextDay.getDate() + 1);
@@ -117,7 +118,8 @@ export class BookingsService {
 
     await this.checkConflicts(booking.roomId, date, startTime, endTime, id);
 
-    booking.date = new Date(date);
+    const [yearUpdate, monthUpdate, dayUpdate] = date.split('-').map(Number);
+    booking.date = new Date(yearUpdate, monthUpdate - 1, dayUpdate);
     booking.startTime = startTime;
     booking.endTime = endTime;
     booking.title = title;
@@ -142,13 +144,19 @@ export class BookingsService {
     endTime: string,
     excludeId?: string,
   ): Promise<void> {
-    const dateObj = new Date(date);
+    const [year, month, day] = date.split('-').map(Number);
+    const dateObj = new Date(year, month - 1, day);
     dateObj.setHours(0, 0, 0, 0);
+    const nextDay = new Date(dateObj);
+    nextDay.setDate(nextDay.getDate() + 1);
 
     const queryBuilder = this.bookingRepository
       .createQueryBuilder('booking')
       .where('booking.room_id = :roomId', { roomId })
-      .andWhere('DATE(booking.date) = DATE(:date)', { date: dateObj })
+      .andWhere('booking.date >= :startDate AND booking.date < :endDate', {
+        startDate: dateObj,
+        endDate: nextDay
+      })
       .andWhere('booking.start_time < :endTime', { endTime })
       .andWhere('booking.end_time > :startTime', { startTime });
 

@@ -23,6 +23,7 @@ import { Booking } from './bookings/entities/booking.entity';
           entities: [Room, Booking],
           synchronize: nodeEnv === 'development' || nodeEnv === 'test',
           logging: nodeEnv === 'development',
+          timezone: 'Z',
         };
       },
       inject: [ConfigService],

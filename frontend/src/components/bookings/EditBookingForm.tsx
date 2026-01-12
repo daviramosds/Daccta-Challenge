@@ -14,8 +14,16 @@ const normalizeTimeFormat = (time: string): string => {
   return time.substring(0, 5);
 };
 
+const formatDateForInput = (dateStr: string): string => {
+  const date = new Date(dateStr);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 export default function EditBookingForm({ booking, onSuccess, onCancel }: EditBookingFormProps) {
-  const [date, setDate] = useState(booking.date.split("T")[0]);
+  const [date, setDate] = useState(formatDateForInput(booking.date));
   const [startTime, setStartTime] = useState(normalizeTimeFormat(booking.startTime));
   const [endTime, setEndTime] = useState(normalizeTimeFormat(booking.endTime));
   const [title, setTitle] = useState(booking.title);

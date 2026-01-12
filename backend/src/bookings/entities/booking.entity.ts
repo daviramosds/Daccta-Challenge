@@ -20,7 +20,7 @@ export class Booking {
   @JoinColumn({ name: 'room_id' })
   room: Room;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'timestamp' })
   date: Date;
 
   @Column({ type: 'time', name: 'start_time' })
