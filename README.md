@@ -161,7 +161,7 @@ erDiagram
 - Não permite sobreposição de horários na mesma sala/dia
 - Permite mesmo horário em salas diferentes
 
-## �🚀 Executando o Projeto
+## 🚀 Executando o Projeto
 
 ### Backend (NestJS)
 
